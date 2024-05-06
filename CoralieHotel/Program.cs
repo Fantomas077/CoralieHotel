@@ -1,7 +1,26 @@
+using CoralieHotel.Data;
+using CoralieHotel.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<AppDbContext>(o=>o.UseSqlServer(builder.Configuration.GetConnectionString("DefautConnection")));
+builder.Services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<AppDbContext>();
+//builder.Services.AddIdentity<AppUser, IdentityRole>(options=>
+//{
+//    options.Password.RequiredUniqueChars = 0;
+//    options.Password.RequiredLength = 8;
+//    options.Password.RequireNonAlphanumeric = false;
+//    options.Password.RequireUppercase = false;
+//    options.Password.RequireLowercase = false;
+//    options.User.RequireUniqueEmail = true;
+
+//}
+//)
+//    .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -15,7 +34,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
